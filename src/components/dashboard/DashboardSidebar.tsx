@@ -13,7 +13,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   X,
-  CreditCard
+  CreditCard,
+  PackagePlus
 } from "lucide-react";
 import { useSidebar } from "./SidebarProvider";
 import Image from "next/image";
@@ -23,6 +24,7 @@ const adminLinks = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
   { name: "Products", href: "/dashboard/products", icon: Package },
+  { name: "Add Product", href: "/dashboard/add-product", icon: PackagePlus },
   { name: "Customers", href: "/dashboard/customers", icon: Users },
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
@@ -30,6 +32,7 @@ const adminLinks = [
 
 const userLinks = [
   { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
+  { name: "Add Product", href: "/dashboard/add-product", icon: PackagePlus },
   { name: "Profile", href: "/dashboard/profile", icon: Users },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
