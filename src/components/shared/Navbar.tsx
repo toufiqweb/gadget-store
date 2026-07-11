@@ -37,13 +37,10 @@ export default function Navbar() {
     { name: "Mac", active: false },
     { name: "Phone Accessories", active: false },
     { name: "Tablets", active: false },
-    { name: "Cases & Protectors", active: false },
     { name: "Watches", active: false },
     { name: "Headphone & Speaker", active: false },
     { name: "PC Accessories", active: false },
     { name: "Camera", active: false },
-    { name: "Gadget", active: false },
-    { name: "Networking", active: false },
     { name: "Gaming", active: false },
     { name: "Drone", active: false },
   ];
@@ -212,14 +209,14 @@ export default function Navbar() {
       {/* Bottom Navigation */}
       <div className="w-full bg-[var(--secondary)] border-b border-black">
         <div className="container mx-auto max-w-7xl relative">
-          <nav className="flex items-center overflow-x-auto no-scrollbar scroll-smooth w-full">
+          <nav className="flex items-center xl:justify-center gap-1 md:gap-2 lg:gap-4 overflow-x-auto no-scrollbar scroll-smooth w-full px-4">
             {navLinks.map((item) => (
               <Link
                 key={item.name}
                 href={`/category/${item.name.toLowerCase().replace(/ /g, "-")}`}
-                className={`relative px-4 py-3.5 text-[13px] font-medium whitespace-nowrap transition-colors group ${
+                className={`relative py-3.5 px-2 text-[13px] font-medium whitespace-nowrap transition-all group ${
                   item.active
-                    ? "text-white"
+                    ? "text-[var(--ternary)]"
                     : "text-gray-300 hover:text-white"
                 }`}
               >
@@ -228,8 +225,8 @@ export default function Navbar() {
                 <div 
                   className={`absolute bottom-0 left-0 w-full h-[2px] transition-all duration-300 ${
                     item.active 
-                      ? "bg-[var(--ternary)] shadow-[0_0_8px_rgba(242,110,33,0.8)]" 
-                      : "bg-transparent group-hover:bg-gray-600"
+                      ? "bg-[var(--ternary)]" 
+                      : "bg-transparent group-hover:bg-gray-600 scale-x-0 group-hover:scale-x-100"
                   }`}
                 />
               </Link>

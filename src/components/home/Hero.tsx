@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Button } from "@/components/ui";
 
 export default function Hero() {
   return (
@@ -25,12 +25,9 @@ export default function Hero() {
           <p className="text-sm md:text-lg lg:text-xl text-gray-700 mb-8 md:mb-10 max-w-2xl font-medium">
             Explore our collection of cutting-edge gadgets and gear.
           </p>
-          <Link
-            href="/category/gadget"
-            className="bg-[var(--ternary)] text-white px-8 py-3.5 md:px-10 md:py-4 rounded-full font-semibold text-sm md:text-base tracking-wide uppercase hover:bg-orange-600 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(242,110,33,0.3)]"
-          >
+          <Button href="/category/gadget">
             Shop Now
-          </Link>
+          </Button>
         </div>
       </div>
     </div>
