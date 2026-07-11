@@ -1,7 +1,37 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Search, MapPin, ShoppingCart, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Search, MapPin, ShoppingCart, User, LogOut, LayoutDashboard, UserCircle } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export default function Navbar() {
+  const router = useRouter();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { 
+    data: session, 
+    isPending,
+  } = authClient.useSession();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    setIsDropdownOpen(false);
+    router.push("/");
+  };
+
   const navLinks = [
     { name: "Phones", active: true },
     { name: "Mac", active: false },
@@ -96,12 +126,68 @@ export default function Navbar() {
                 >
                   <ShoppingCart size={18} />
                 </button>
-                <button 
-                  className="bg-[#2a2b36] hover:bg-[#353642] p-2.5 rounded-md transition-colors h-10 w-10 flex items-center justify-center"
-                  aria-label="User Profile"
-                >
-                  <User size={18} />
-                </button>
+                {isPending ? (
+                  <div className="bg-[#2a2b36] rounded-md h-10 w-10 animate-pulse"></div>
+                ) : session?.user ? (
+                  <div className="relative" ref={dropdownRef}>
+                    <button 
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="h-10 w-10 rounded-md overflow-hidden bg-[#2a2b36] flex items-center justify-center border border-gray-600 hover:border-[var(--ternary)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--ternary)]"
+                    >
+                      {session.user.image ? (
+                        <img src={session.user.image} alt={session.user.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="text-white font-bold text-sm uppercase">{session.user.name.charAt(0)}</span>
+                      )}
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 mt-3 w-56 bg-[var(--primary)] rounded-xl shadow-2xl py-2 z-50 border border-gray-800 text-gray-200 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                        <div className="px-4 py-3 border-b border-gray-800 mb-1">
+                          <p className="text-sm font-bold text-white truncate">{session.user.name}</p>
+                          <p className="text-xs text-gray-400 truncate mt-0.5">{session.user.email}</p>
+                        </div>
+                        
+                        <Link 
+                          href="/profile" 
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[#2a2b36] hover:text-[var(--ternary)] transition-colors"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <UserCircle size={18} />
+                          <span className="font-medium">Profile</span>
+                        </Link>
+                        
+                        <Link 
+                          href="/dashboard" 
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[#2a2b36] hover:text-[var(--ternary)] transition-colors"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <LayoutDashboard size={18} />
+                          <span className="font-medium">Dashboard</span>
+                        </Link>
+                        
+                        <div className="h-px bg-gray-800 my-1.5 mx-3"></div>
+                        
+                        <button 
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 hover:text-red-400 transition-colors text-left"
+                        >
+                          <LogOut size={18} />
+                          <span className="font-medium">Logout</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link 
+                    href="/login"
+                    className="bg-[#2a2b36] hover:bg-[#353642] p-2.5 rounded-md transition-colors h-10 w-10 flex items-center justify-center"
+                    aria-label="User Profile"
+                  >
+                    <User size={18} />
+                  </Link>
+                )}
               </div>
             </div>
           </div>
