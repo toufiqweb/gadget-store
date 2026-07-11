@@ -22,6 +22,7 @@ export function Button({
   type = "button",
   className = "",
   variant = "primary",
+  disabled = false,
 }: {
   children: React.ReactNode;
   href?: string;
@@ -29,8 +30,9 @@ export function Button({
   type?: "button" | "submit" | "reset";
   className?: string;
   variant?: "primary" | "secondary" | "outline";
+  disabled?: boolean;
 }) {
-  const baseStyles = "inline-flex items-center justify-center px-8 py-3.5 md:px-10 md:py-4 rounded-full font-semibold text-sm md:text-base tracking-wide uppercase transition-all duration-300 transform hover:-translate-y-1 text-center";
+  const baseStyles = "inline-flex items-center justify-center px-8 py-3.5 md:px-10 md:py-4 rounded-full font-semibold text-sm md:text-base tracking-wide uppercase transition-all duration-300 transform hover:-translate-y-1 text-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0 disabled:hover:shadow-none";
   
   const variants = {
     primary: "bg-[var(--ternary)] text-white hover:bg-orange-600 hover:shadow-[0_10px_20px_rgba(242,110,33,0.3)]",
@@ -40,7 +42,7 @@ export function Button({
 
   const styles = `${baseStyles} ${variants[variant]} ${className}`;
 
-  if (href) {
+  if (href && !disabled) {
     return (
       <Link href={href} className={styles} onClick={onClick}>
         {children}
@@ -49,7 +51,7 @@ export function Button({
   }
 
   return (
-    <button type={type} className={styles} onClick={onClick}>
+    <button type={type} className={styles} onClick={onClick} disabled={disabled}>
       {children}
     </button>
   );
