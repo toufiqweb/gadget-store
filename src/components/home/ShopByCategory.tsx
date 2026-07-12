@@ -44,7 +44,7 @@ const categories = [
 
 export default function ShopByCategory() {
   return (
-    <section className="py-12 md:py-16 bg-white">
+    <section className=" bg-white">
       <Container>
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

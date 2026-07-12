@@ -10,7 +10,7 @@ export default async function LatestArrivals() {
   const latestArrivals = productsRes?.data || [];
 
   return (
-    <section className="bg-gray-50/50 py-16 md:py-24">
+    <section className="bg-gray-50/50 ">
       <Container>
         
         {/* Header Section */}

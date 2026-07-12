@@ -56,7 +56,7 @@ const bottomBanners = [
 
 export default function PromoBanners() {
   return (
-    <section className="py-12 bg-white">
+    <section className=" bg-white">
       <Container>
         <div className="flex flex-col gap-6">
           

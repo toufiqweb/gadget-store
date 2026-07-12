@@ -31,7 +31,7 @@ function BrandCard({ brand }: { brand: Brand }) {
 
 export default function TopBrands() {
   return (
-    <section className="bg-white py-16 md:py-24">
+    <section className="bg-white ">
       <Container>
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">

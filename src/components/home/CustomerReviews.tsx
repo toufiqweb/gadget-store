@@ -78,7 +78,7 @@ const reviews = [
 
 export default function CustomerReviews() {
   return (
-    <section className="bg-[#f8f9fa] py-20 md:py-32">
+    <section className="bg-[#f8f9fa] py-[30px] md:py-[70px]">
       <Container>
         
         {/* Section Header */}

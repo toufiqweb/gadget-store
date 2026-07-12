@@ -16,7 +16,7 @@ export default async function FeaturedProducts() {
     .slice(0, 4);
 
   return (
-    <section className="bg-white py-16 md:py-24">
+    <section className="bg-white ">
       <Container>
         
         {/* Header Section */}
