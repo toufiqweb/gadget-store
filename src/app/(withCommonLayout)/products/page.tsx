@@ -18,6 +18,8 @@ export default function ProductsPage() {
   const [appliedPrice, setAppliedPrice] = useState(2000);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [sort, setSort] = useState("newest");
+  const [rating, setRating] = useState<number>(0);
+  const [inStock, setInStock] = useState<boolean>(false);
 
   const categories = [
     "Phones", "Cameras","Drones","Wearables" ,
@@ -33,6 +35,8 @@ export default function ProductsPage() {
     brandFilter: string[],
     maxPrice: number,
     sortOption: string,
+    ratingFilter: number,
+    inStockFilter: boolean,
     isLoadMore: boolean = false
   ) => {
     setLoading(true);
@@ -46,6 +50,8 @@ export default function ProductsPage() {
       if (cat && cat !== "All" && cat !== "All Products") params.append("category", cat);
       if (brandFilter.length > 0) params.append("brands", brandFilter.join(","));
       if (maxPrice < 2000) params.append("maxPrice", String(maxPrice));
+      if (ratingFilter > 0) params.append("rating", String(ratingFilter));
+      if (inStockFilter) params.append("inStock", "true");
       if (sortOption) params.append("sort", sortOption);
 
       const res = await fetch(`${baseUrl}/api/products?${params.toString()}`);
@@ -75,10 +81,10 @@ export default function ProductsPage() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setPage(1);
-      fetchProducts(1, search, category, selectedBrands, appliedPrice, sort, false);
+      fetchProducts(1, search, category, selectedBrands, appliedPrice, sort, rating, inStock, false);
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [search, category, selectedBrands, appliedPrice, sort, fetchProducts]);
+  }, [search, category, selectedBrands, appliedPrice, sort, rating, inStock, fetchProducts]);
 
   const handleBrandToggle = (brand: string) => {
     setSelectedBrands(prev => 
@@ -90,7 +96,7 @@ export default function ProductsPage() {
     if (loading || !hasMore) return;
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchProducts(nextPage, search, category, selectedBrands, appliedPrice, sort, true);
+    fetchProducts(nextPage, search, category, selectedBrands, appliedPrice, sort, rating, inStock, true);
   };
 
   const handleClearFilters = () => {
@@ -100,6 +106,8 @@ export default function ProductsPage() {
     setPriceRange(2000);
     setAppliedPrice(2000);
     setSort("newest");
+    setRating(0);
+    setInStock(false);
     setPage(1);
   };
 
@@ -175,6 +183,45 @@ export default function ProductsPage() {
                 </div>
               </div>
 
+              {/* Stock Filter */}
+              <div className="mb-6">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input 
+                    type="checkbox" 
+                    checked={inStock}
+                    onChange={(e) => setInStock(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-[var(--ternary)] focus:ring-[var(--ternary)] cursor-pointer"
+                  />
+                  <span className="text-sm font-bold text-gray-900 group-hover:text-[var(--ternary)]">In Stock Only</span>
+                </label>
+              </div>
+
+              {/* Rating Filter */}
+              <div className="mb-6">
+                <h4 className="text-sm font-bold text-gray-900 mb-4">Customer Rating</h4>
+                <div className="flex flex-col gap-3">
+                  {[4, 3, 2, 1].map((star) => (
+                    <label key={star} className="flex items-center gap-3 cursor-pointer group">
+                      <input 
+                        type="radio" 
+                        name="rating"
+                        checked={rating === star}
+                        onChange={() => setRating(star)}
+                        className="w-4 h-4 text-[var(--ternary)] focus:ring-[var(--ternary)] cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-600 flex items-center gap-1 group-hover:text-gray-900">
+                        {Array(5).fill(0).map((_, i) => (
+                          <svg key={i} className={`w-4 h-4 ${i < star ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                          </svg>
+                        ))}
+                        <span className="ml-1">& Up</span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               {/* Price Filter */}
               <div className="mb-6">
                 <h4 className="text-sm font-bold text-gray-900 mb-4">Price</h4>
@@ -226,9 +273,12 @@ export default function ProductsPage() {
                     className="bg-transparent outline-none cursor-pointer text-gray-900 font-medium appearance-none min-w-[120px]"
                   >
                     <option value="newest">Newest Arrivals</option>
+                    <option value="oldest">Oldest</option>
                     <option value="price_asc">Price: Low to High</option>
                     <option value="price_desc">Price: High to Low</option>
                     <option value="rating_desc">Highest Rated</option>
+                    <option value="name_asc">Name: A to Z</option>
+                    <option value="name_desc">Name: Z to A</option>
                   </select>
                 </div>
               </div>
