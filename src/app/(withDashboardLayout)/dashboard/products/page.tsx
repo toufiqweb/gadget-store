@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { getAdminProducts } from "@/lib/api/product";
 import { deleteProductAction, patchProductAction } from "@/lib/actions/products";
-import { Loader2, Search, Edit, Trash2, X, Plus, AlertTriangle, ChevronLeft, ChevronRight, Star, PackageOpen } from "lucide-react";
+import { Loader2, Search, Edit, Trash2, X, Plus, ChevronLeft, ChevronRight, Star, PackageOpen, AlertTriangle } from "lucide-react";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -192,16 +193,7 @@ export default function AdminProductsPage() {
   }
 
   if (!session || !isAdmin) {
-    return (
-      <div className="flex flex-col h-[60vh] items-center justify-center text-gray-900">
-        <AlertTriangle className="h-12 w-12 text-red-500 mb-4" />
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
-        <p className="text-gray-500">Admin credentials are required to view this page.</p>
-        <Link href="/dashboard" className="mt-6 bg-[var(--ternary)] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-colors">
-          Return to Dashboard
-        </Link>
-      </div>
-    );
+    redirect("/forbidden");
   }
 
   const modalInputStyles = "w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[var(--ternary)] focus:border-[var(--ternary)] transition-colors";

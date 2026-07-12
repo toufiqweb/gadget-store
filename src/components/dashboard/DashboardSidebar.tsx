@@ -8,6 +8,7 @@ import {
   ShoppingCart,
   Package,
   Users,
+  User,
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
@@ -24,8 +25,9 @@ const adminLinks = [
   { name: "Products", href: "/dashboard/products", icon: Package },
   { name: "My Products", href: "/dashboard/my-products", icon: Package },
   { name: "Add Product", href: "/dashboard/add-product", icon: PackagePlus },
-  { name: "Customers", href: "/dashboard/customers", icon: Users },
+  { name: "Users", href: "/dashboard/users", icon: Users },
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
+  { name: "Profile", href: "/dashboard/profile", icon: User },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -33,7 +35,7 @@ const userLinks = [
   { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
   { name: "My Products", href: "/dashboard/my-products", icon: Package },
   { name: "Add Product", href: "/dashboard/add-product", icon: PackagePlus },
-  { name: "Profile", href: "/dashboard/profile", icon: Users },
+  { name: "Profile", href: "/dashboard/profile", icon: User },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
