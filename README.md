@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gadget Store — Client 🛍️📱
 
-## Getting Started
+Welcome to the frontend application of the **Gadget Store**, a modern, blazing-fast, and deeply interactive e-commerce platform crafted with cutting-edge web technologies.
 
-First, run the development server:
+## ✨ Key Features
 
+- **Modern Tech Stack**: Built on **Next.js 16** with the App Router, leveraging React 19 and **Tailwind CSS v4** for robust and responsive styling.
+- **Robust Authentication**: Powered by **Better Auth**, featuring secure login, registration, and session management.
+- **Advanced Product Filtering**: A completely backend-controlled filtering system. Users can effortlessly filter products by text search, brand, category, price range, stock availability, and customer rating, alongside rich sorting options (A-Z, Newest, Price, Rating).
+- **Custom Toast System**: A handcrafted, animated, global React Context-based toast notification system that provides beautiful contextual feedback without relying on bulky external libraries.
+- **Dynamic Dashboards**: Dedicated views for user profiles and an administrative dashboard to manage products.
+- **Fully Responsive**: Painstakingly crafted with Tailwind CSS to ensure a premium, dark-accented UI (driven by a custom CSS variables theme) that looks stunning on desktops, tablets, and mobile devices.
+
+## 🚀 Quick Start
+
+### 1. Prerequisites
+Ensure you have Node.js (v20+) installed on your machine.
+
+### 2. Installation
+Navigate into the `client` directory and install the required dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd client
+npm install
 ```
 
+### 3. Environment Variables
+Create a `.env.local` file in the root of the `client` directory and configure your environment variables. A typical setup looks like:
+```env
+NEXT_PUBLIC_BASE_URL=http://localhost:5000
+# Add your Better Auth or other necessary variables here
+```
+
+### 4. Running the Development Server
+Fire up the local Next.js development server:
+```bash
+npm run dev
+```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app/` — Contains the Next.js App Router endpoints, including layout files, authentication flows (`/login`, `/register`), the product discovery page (`/products`), and dashboards.
+- `src/components/` — Houses modular UI components.
+  - `shared/` — Reusable layouts like `Navbar.tsx` and `ProductCard.tsx`.
+  - `ui/` — Hand-crafted granular UI components (e.g., `Toast.tsx`).
+- `src/contexts/` — Global state providers (like `ToastContext.tsx`).
+- `src/lib/` — Helper files, custom API fetchers (`api/`), and authentication configurations (`auth-client.ts`).
 
-## Learn More
+## 🛠️ Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` — Starts the development server with Turbopack.
+- `npm run build` — Compiles the application for production deployment.
+- `npm run start` — Runs the compiled production build locally.
+- `npm run lint` — Runs ESLint to statically analyze the code for issues.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 Theming
+The visual aesthetic is strictly controlled through custom CSS variables found in `src/app/globals.css`. By manipulating `--primary`, `--secondary`, and `--ternary` variables, the global color palette updates instantly across all components.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Developed with ❤️ for the Gadget Store.*
