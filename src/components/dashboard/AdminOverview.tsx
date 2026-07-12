@@ -193,7 +193,7 @@ export default function AdminOverview() {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: number, name: string) => [`${value} products`, name]}
+                  formatter={(value: any, name: any) => [`${value} products`, name]}
                 />
                 <Legend
                   iconType="circle"
@@ -223,7 +223,7 @@ export default function AdminOverview() {
               <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${v}`} />
               <Tooltip
                 content={<CustomTooltip />}
-                formatter={(v: number) => [`$${v.toLocaleString()}`, "Avg Price"]}
+                formatter={(v: any) => [`$${Number(v).toLocaleString()}`, "Avg Price"]}
               />
               <Bar dataKey="avgPrice" name="Avg Price" fill="#6366f1" radius={[6, 6, 0, 0]} />
             </BarChart>

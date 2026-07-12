@@ -21,7 +21,8 @@ export default function DashboardOverviewPage() {
     return <LoadingSpinner />;
   }
 
-  const isAdmin = session?.user?.role === "admin";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isAdmin = (session?.user as any)?.role === "admin";
 
   return (
     <Suspense fallback={<LoadingSpinner />}>

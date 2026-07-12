@@ -2,14 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Search, MapPin, ShoppingCart, User, LogOut, LayoutDashboard, UserCircle, Tag, Phone, ChevronDown } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -221,12 +220,7 @@ export default function Navbar() {
         <div className="container mx-auto max-w-7xl relative">
           <nav className="flex items-center xl:justify-center gap-1 md:gap-2 lg:gap-4 overflow-x-auto no-scrollbar scroll-smooth w-full px-4">
             {navLinks.map((item) => {
-              const isActive = 
-                item.href === "/" 
-                  ? pathname === "/" 
-                  : item.href.includes("category=")
-                    ? searchParams.get("category") === item.name
-                    : pathname === item.href && !searchParams.has("category");
+              const isActive = item.href === "/" ? pathname === "/" : pathname === item.href;
 
               return (
               <Link

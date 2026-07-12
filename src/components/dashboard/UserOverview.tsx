@@ -185,7 +185,7 @@ export default function UserOverview({ userName }: { userName?: string }) {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: number, name: string) => [`${value} product${value > 1 ? "s" : ""}`, name]}
+                  formatter={(value: any, name: any) => [`${value} product${Number(value) > 1 ? "s" : ""}`, name]}
                 />
                 <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: "12px" }} />
               </PieChart>

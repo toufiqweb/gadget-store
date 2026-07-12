@@ -32,6 +32,7 @@ const adminLinks = [
 ];
 
 const userLinks = [
+   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
   { name: "My Products", href: "/dashboard/my-products", icon: Package },
   { name: "Add Product", href: "/dashboard/add-product", icon: PackagePlus },
@@ -52,7 +53,7 @@ export default function DashboardSidebar() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderNavItem = (item: any) => {
     const Icon = item.icon;
-    const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+    const isActive = item.href === "/dashboard" ? pathname === item.href : (pathname === item.href || pathname.startsWith(item.href + '/'));
 
     return (
       <Link
