@@ -47,3 +47,11 @@ export const getMyOrdersClient = async (userId: string, page = 1, limit = 10) =>
 export const getMyProducts = async () => {
   return protectedFetch("/api/products/user/my-products", {}, { cache: 'no-store' });
 };
+
+/**
+ * Protected fetch to get admin products (paginated + search support)
+ */
+export const getAdminProducts = async (page = 1, limit = 10, search = "") => {
+  const queryParams = `?page=${page}&limit=${limit}${search ? `&search=${encodeURIComponent(search)}` : ""}`;
+  return protectedFetch(`/api/admin/products${queryParams}`, {}, { cache: 'no-store' });
+};

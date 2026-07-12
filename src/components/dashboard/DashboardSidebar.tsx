@@ -9,7 +9,6 @@ import {
   Package,
   Users,
   Settings,
-  MoreVertical,
   PanelLeftClose,
   PanelLeftOpen,
   X,
@@ -17,7 +16,6 @@ import {
   PackagePlus
 } from "lucide-react";
 import { useSidebar } from "./SidebarProvider";
-import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 
 const adminLinks = [
@@ -45,10 +43,12 @@ export default function DashboardSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { data: session } = authClient.useSession();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isAdmin = (session?.user as any)?.role === "admin";
   const currentLinks = isAdmin ? adminLinks : userLinks;
 
-  const renderNavItem = (item: typeof adminLinks[0]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderNavItem = (item: any) => {
     const Icon = item.icon;
     const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
 
@@ -59,7 +59,7 @@ export default function DashboardSidebar() {
         className={`group relative flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ${
           isActive
             ? "bg-[var(--ternary)] text-white"
-            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
         }`}
         style={{ borderRadius: "8px" }}
         onClick={() => setSidebarOpen(false)}
@@ -67,12 +67,12 @@ export default function DashboardSidebar() {
         <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
 
         {!isCollapsed && (
-          <span className="text-[13px] font-medium truncate">{item.name}</span>
+          <span className="text-[13px] font-semibold truncate">{item.name}</span>
         )}
 
         {/* Tooltip for collapsed state */}
         {isCollapsed && (
-          <div className="absolute left-full ml-4 rounded-md bg-[var(--secondary)] px-2.5 py-1.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 shadow-xl border border-gray-800 whitespace-nowrap">
+          <div className="absolute left-full ml-4 rounded-md bg-gray-900 px-2.5 py-1.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 shadow-xl whitespace-nowrap">
             {item.name}
           </div>
         )}
@@ -85,14 +85,14 @@ export default function DashboardSidebar() {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm lg:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-[var(--primary)] backdrop-blur-3xl border-r border-gray-800 transform transition-all duration-300 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-gray-100 transform transition-all duration-300 ease-in-out lg:static lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } ${isCollapsed ? "lg:w-[72px] w-[260px]" : "w-[260px]"}`}
       >
@@ -110,12 +110,12 @@ export default function DashboardSidebar() {
               </div>
             ) : (
               <div className="flex flex-col items-start leading-none">
-                <div className="flex items-center text-xl lg:text-2xl font-bold tracking-tighter text-white">
+                <div className="flex items-center text-xl lg:text-2xl font-bold tracking-tighter text-gray-900">
                   <span>G</span>
                   <span className="text-[var(--ternary)] -mx-0.5">&</span>
                   <span>S</span>
                 </div>
-                <span className="text-[0.5rem] uppercase tracking-widest text-gray-400 mt-0.5 whitespace-nowrap">
+                <span className="text-[0.5rem] uppercase tracking-widest text-gray-500 mt-0.5 whitespace-nowrap">
                   Gadget & store
                 </span>
               </div>
@@ -124,7 +124,7 @@ export default function DashboardSidebar() {
 
           {/* Desktop Collapse Toggle */}
           <button
-            className="hidden lg:flex text-gray-400 hover:text-white transition-colors rounded-lg p-1.5 hover:bg-gray-800 shrink-0"
+            className="hidden lg:flex text-gray-400 hover:text-gray-900 transition-colors rounded-lg p-1.5 hover:bg-gray-50 shrink-0"
             onClick={() => setIsCollapsed(!isCollapsed)}
           >
             {isCollapsed ? (
@@ -136,7 +136,7 @@ export default function DashboardSidebar() {
 
           {/* Mobile Close Button */}
           <button
-            className="lg:hidden text-gray-400 hover:text-white transition-colors rounded-lg p-1.5 hover:bg-gray-800"
+            className="lg:hidden text-gray-400 hover:text-gray-900 transition-colors rounded-lg p-1.5 hover:bg-gray-50"
             onClick={() => setSidebarOpen(false)}
           >
             <X size={18} />
@@ -146,11 +146,12 @@ export default function DashboardSidebar() {
         {/* Navigation Links Area */}
         <div className="flex-1 overflow-y-auto py-2 px-3 space-y-1 no-scrollbar">
           {!isCollapsed && (
-            <div className="px-3 mb-2 mt-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            <div className="px-3 mb-2 mt-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">
               Menu
             </div>
           )}
-          {currentLinks.map(renderNavItem)}
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {currentLinks.map((item: any) => renderNavItem(item))}
         </div>
       </aside>
     </>

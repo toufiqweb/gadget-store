@@ -2,26 +2,36 @@
 
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { getMyProducts } from "@/lib/api/product";
+import { getAdminProducts } from "@/lib/api/product";
 import { deleteProductAction, patchProductAction } from "@/lib/actions/products";
-import ProductCard from "@/components/shared/ProductCard";
-import { Loader2, PackageOpen, Plus, Trash2, Edit3, X, AlertTriangle } from "lucide-react";
+import { Loader2, Search, Edit, Trash2, X, Plus, AlertTriangle, ChevronLeft, ChevronRight, Star, PackageOpen } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
-export default function MyProductsPage() {
+export default function AdminProductsPage() {
   const { data: session, isPending: isAuthPending } = authClient.useSession();
   
-  // Products state
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isAdmin = (session?.user as any)?.role === "admin";
+
+  // Products and Pagination state
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const limit = 10;
 
   // Edit / Delete Modal states
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [productToDelete, setProductToDelete] = useState<any | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [productToEdit, setProductToEdit] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -40,12 +50,25 @@ export default function MyProductsPage() {
     images: "",
   });
 
-  const fetchMyProducts = async () => {
+  // Handle Search Debounce
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1); // Reset to page 1 on new search
+    }, 400);
+
+    return () => clearTimeout(handler);
+  }, [search]);
+
+  // Fetch Products
+  const fetchProducts = async () => {
     try {
       setIsLoading(true);
-      const res = await getMyProducts();
+      const res = await getAdminProducts(page, limit, debouncedSearch);
       if (res.success && Array.isArray(res.data)) {
         setProducts(res.data);
+        setTotalPages(res.meta?.totalPages || 1);
+        setTotalProducts(res.meta?.total || 0);
       } else {
         setError(res.message || "Failed to load products");
       }
@@ -58,13 +81,14 @@ export default function MyProductsPage() {
   };
 
   useEffect(() => {
-    if (session) {
+    if (isAdmin) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchMyProducts();
+      fetchProducts();
     }
-  }, [session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin, page, debouncedSearch]);
 
-  // Handle Edit Action
+  // Edit Click Handler
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditClick = (product: any) => {
     setProductToEdit(product);
@@ -126,7 +150,7 @@ export default function MyProductsPage() {
     }
   };
 
-  // Handle Delete Action
+  // Delete Action Handlers
   const handleDeleteConfirm = async () => {
     if (!productToDelete) return;
     setIsDeleting(true);
@@ -136,13 +160,21 @@ export default function MyProductsPage() {
     try {
       await deleteProductAction(productId);
       
-      // Remove from state
+      // Refresh local state or remove
       setProducts(prev => prev.filter(p => {
         const id = p._id?.$oid || p._id || p.id;
         return id !== productId;
       }));
-
+      setTotalProducts(prev => Math.max(0, prev - 1));
       setProductToDelete(null);
+
+      // If we deleted the last item on the page, go back a page
+      if (products.length === 1 && page > 1) {
+        setPage(prev => prev - 1);
+      } else {
+        // fetch to get replacement item for paginated page bounds
+        fetchProducts();
+      }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       alert(err.message || "Failed to delete product. Please try again.");
@@ -159,11 +191,15 @@ export default function MyProductsPage() {
     );
   }
 
-  if (!session) {
+  if (!session || !isAdmin) {
     return (
       <div className="flex flex-col h-[60vh] items-center justify-center text-gray-900">
+        <AlertTriangle className="h-12 w-12 text-red-500 mb-4" />
         <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
-        <p className="text-gray-500">Please log in to view your products.</p>
+        <p className="text-gray-500">Admin credentials are required to view this page.</p>
+        <Link href="/dashboard" className="mt-6 bg-[var(--ternary)] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-colors">
+          Return to Dashboard
+        </Link>
       </div>
     );
   }
@@ -174,8 +210,8 @@ export default function MyProductsPage() {
     <div className="space-y-6 text-gray-900 pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">My Products</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage and view the gadget listings you have created.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Products Directory</h1>
+          <p className="text-sm text-gray-500 mt-1">Global catalog listing management for the store.</p>
         </div>
         <Link 
           href="/dashboard/add-product" 
@@ -184,6 +220,17 @@ export default function MyProductsPage() {
           <Plus size={18} />
           Add Product
         </Link>
+      </div>
+
+      {/* Filters/Search Bar */}
+      <div className="relative max-w-md">
+        <Search className="pointer-events-none absolute inset-y-0 left-4 h-full w-4 text-gray-400" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="block h-10 w-full rounded-xl border border-gray-200 bg-white py-1.5 pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:border-[var(--ternary)] focus:ring-1 focus:ring-[var(--ternary)] outline-none text-sm transition-all shadow-sm"
+          placeholder="Search product by title, brand, or category..."
+        />
       </div>
 
       {isLoading ? (
@@ -195,46 +242,145 @@ export default function MyProductsPage() {
           {error}
         </div>
       ) : products.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <div key={product._id || product.id} className="relative group/dashboard-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-              <div className="flex-1">
-                <ProductCard product={product} />
-              </div>
-              <div className="flex border-t border-gray-100 bg-gray-50/50 z-20 relative">
-                <button 
-                  onClick={() => handleEditClick(product)}
-                  className="flex-1 py-3 flex items-center justify-center gap-2 text-xs md:text-sm font-semibold hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors border-r border-gray-100"
-                >
-                  <Edit3 size={14} />
-                  Edit
-                </button>
-                <button 
-                  onClick={() => setProductToDelete(product)}
-                  className="flex-1 py-3 flex items-center justify-center gap-2 text-xs md:text-sm font-semibold hover:bg-red-50 text-red-500 hover:text-red-600 transition-colors"
-                >
-                  <Trash2 size={14} />
-                  Delete
-                </button>
-              </div>
+        <div className="space-y-4">
+          <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50/50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="py-4 px-6">Product</th>
+                    <th className="py-4 px-6">Brand</th>
+                    <th className="py-4 px-6">Category</th>
+                    <th className="py-4 px-6">Price</th>
+                    <th className="py-4 px-6">Stock</th>
+                    <th className="py-4 px-6">Rating</th>
+                    <th className="py-4 px-6 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-sm">
+                  {products.map((product) => {
+                    const productId = product._id?.$oid || product._id || product.id;
+                    return (
+                      <tr key={productId} className="hover:bg-gray-50/30 transition-colors">
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-3">
+                            <div className="relative h-12 w-12 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0">
+                              <Image
+                                src={product.thumbnail || "https://placehold.co/100x100?text=No+Image"}
+                                alt={product.title}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div>
+                              <Link 
+                                href={`/products/${productId}`} 
+                                className="font-bold text-gray-900 hover:text-[var(--ternary)] transition-colors line-clamp-1"
+                              >
+                                {product.title}
+                              </Link>
+                              <span className="text-xs text-gray-455 block mt-0.5 font-medium">ID: {productId.toString().substring(0, 10)}...</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 font-semibold text-gray-600">{product.brand}</td>
+                        <td className="py-4 px-6">
+                          <span className="bg-gray-100 text-gray-800 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                            {product.category}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 font-bold text-gray-900">${Number(product.price).toLocaleString()}</td>
+                        <td className="py-4 px-6 font-semibold">
+                          <span className={product.stock > 0 ? "text-gray-900" : "text-red-500 font-bold"}>
+                            {product.stock}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-1">
+                            <Star size={14} className="text-yellow-400" fill="currentColor" />
+                            <span className="font-bold text-gray-900">{product.rating ? Number(product.rating).toFixed(1) : "0.0"}</span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleEditClick(product)}
+                              className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
+                              title="Edit Product"
+                            >
+                              <Edit size={16} />
+                            </button>
+                            <button
+                              onClick={() => setProductToDelete(product)}
+                              className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                              title="Delete Product"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          ))}
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-100">
+            <p className="text-xs font-semibold text-gray-500">
+              Showing <span className="text-gray-900">{(page - 1) * limit + 1}</span> to <span className="text-gray-900">{Math.min(page * limit, totalProducts)}</span> of <span className="text-gray-900">{totalProducts}</span> products
+            </p>
+            <div className="flex items-center gap-1">
+              <button
+                disabled={page <= 1}
+                onClick={() => setPage(prev => prev - 1)}
+                className="p-2 rounded-xl border border-gray-200 hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:hover:bg-transparent text-gray-600 shrink-0"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              {Array.from({ length: totalPages }).map((_, idx) => {
+                const pageNum = idx + 1;
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setPage(pageNum)}
+                    className={`h-9 w-9 rounded-xl border text-xs font-bold transition-all ${
+                      page === pageNum
+                        ? "border-[var(--ternary)] bg-[var(--ternary)] text-white shadow-sm"
+                        : "border-gray-200 hover:bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+              <button
+                disabled={page >= totalPages}
+                onClick={() => setPage(prev => prev + 1)}
+                className="p-2 rounded-xl border border-gray-200 hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:hover:bg-transparent text-gray-600 shrink-0"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center text-center py-20 bg-white rounded-2xl border border-gray-100 px-4 shadow-sm">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-4">
             <PackageOpen size={32} />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">No Products Added Yet</h3>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">No Products Found</h3>
           <p className="text-gray-500 text-sm max-w-sm mb-6 leading-relaxed">
-            You haven&apos;t listed any gadgets for sale. Start by adding your first product!
+            There are no products matching your search term. Try clear query or write another name.
           </p>
-          <Link 
-            href="/dashboard/add-product" 
-            className="inline-flex items-center gap-2 bg-[var(--ternary)] hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-sm active:scale-95"
+          <button 
+            onClick={() => setSearch("")} 
+            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2.5 rounded-xl font-bold text-sm transition-all"
           >
-            Create Your First Listing
-          </Link>
+            Clear Search
+          </button>
         </div>
       )}
 
@@ -295,7 +441,7 @@ export default function MyProductsPage() {
             </button>
             
             <h3 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-3 flex items-center gap-2">
-              <Edit3 size={20} className="text-[var(--ternary)]" />
+              <Edit size={20} className="text-[var(--ternary)]" />
               Edit Product Details
             </h3>
 

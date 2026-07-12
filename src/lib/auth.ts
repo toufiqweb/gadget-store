@@ -19,6 +19,9 @@ export const auth = betterAuth({
       role: {
         type: "string",
         defaultValue: "user",
+      }, status: {
+        type: "string",
+        defaultValue: "active", // active, blocked
       },
       
     },

@@ -5,7 +5,7 @@ import { SidebarProvider } from "@/components/dashboard/SidebarProvider";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-[#14151a] font-sans transition-colors duration-300 overflow-hidden">
+      <div className="flex h-screen bg-gray-50/50 font-sans transition-colors duration-300 overflow-hidden">
         {/* Sidebar Component */}
         <DashboardSidebar />
 
@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <DashboardNavbar />
 
           {/* Main Content */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-black/20 text-white">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-white text-gray-900">
             <div className="mx-auto max-w-7xl">{children}</div>
           </main>
         </div>
