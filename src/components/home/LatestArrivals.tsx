@@ -4,29 +4,23 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui";
 
-export default async function FeaturedProducts() {
-  // Fetch products and find top rated
-  const productsRes = await getAllProducts({ limit: 12 });
-  let featuredProducts = productsRes?.data || [];
-  
-  // Sort by rating descending and take top 4
-  featuredProducts = featuredProducts
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .sort((a: any, b: any) => (Number(b.rating) || 0) - (Number(a.rating) || 0))
-    .slice(0, 4);
+export default async function LatestArrivals() {
+  // Fetch up to 4 latest products
+  const productsRes = await getAllProducts({ limit: 4});
+  const latestArrivals = productsRes?.data || [];
 
   return (
-    <section className="bg-white py-16 md:py-24">
+    <section className="bg-gray-50/50 py-16 md:py-24">
       <Container>
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div className="max-w-2xl">
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-950 mb-3">
-              Featured <span className="text-[var(--ternary)]">Products</span>
+              Latest <span className="text-[var(--ternary)]">Arrivals</span>
             </h2>
             <p className="text-gray-500 text-base md:text-lg leading-relaxed">
-              Explore our top-rated selection of premium gadgets and tech accessories.
+              Discover our newest selection of premium gadgets and tech accessories, handpicked for quality and performance.
             </p>
           </div>
           
@@ -41,10 +35,9 @@ export default async function FeaturedProducts() {
         </div>
 
         {/* Product Grid Area */}
-        {featuredProducts.length > 0 ? (
+        {latestArrivals.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {featuredProducts.map((product: any) => (
+            {latestArrivals.map((product: any) => (
               <ProductCard key={product._id || product.id} product={product} />
             ))}
           </div>
