@@ -153,7 +153,7 @@ export default function Navbar() {
                         <p className="text-xs text-gray-400 truncate mt-0.5">{session.user.email}</p>
                       </div>
                       
-                      <Link href="/profile" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-[var(--secondary)] hover:text-white transition-colors" onClick={() => setIsDropdownOpen(false)}>
+                      <Link href="/dashboard/profile" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-[var(--secondary)] hover:text-white transition-colors" onClick={() => setIsDropdownOpen(false)}>
                         <UserCircle size={18} className="text-gray-400" /> Profile
                       </Link>
                       

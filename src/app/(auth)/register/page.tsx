@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { useToast } from "@/contexts/ToastContext";
-import { Smartphone, Mail, Lock, User, Loader2, Image as ImageIcon } from "lucide-react";
+import { Smartphone, Mail, Lock, User, Loader2, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { showToast } = useToast();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -133,15 +134,26 @@ export default function RegisterPage() {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   required
                   minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full pl-11 pr-3 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--ternary)] focus:border-transparent sm:text-sm transition-all bg-gray-50 focus:bg-white"
+                  className="appearance-none block w-full pl-11 pr-11 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--ternary)] focus:border-transparent sm:text-sm transition-all bg-gray-50 focus:bg-white"
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
               </div>
             </div>
 
