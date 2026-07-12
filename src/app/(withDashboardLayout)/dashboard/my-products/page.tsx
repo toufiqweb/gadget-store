@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { getMyProducts } from "@/lib/api/product";
 import { deleteProductAction, patchProductAction } from "@/lib/actions/products";
+import { useToast } from "@/contexts/ToastContext";
 import ProductCard from "@/components/shared/ProductCard";
 import { Loader2, PackageOpen, Plus, Trash2, Edit3, X, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 
 export default function MyProductsPage() {
+  const { showToast } = useToast();
   const { data: session, isPending: isAuthPending } = authClient.useSession();
   
   // Products state
@@ -145,7 +147,7 @@ export default function MyProductsPage() {
       setProductToDelete(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      alert(err.message || "Failed to delete product. Please try again.");
+      showToast(err.message || "Failed to delete product. Please try again.", "error");
     } finally {
       setIsDeleting(false);
     }

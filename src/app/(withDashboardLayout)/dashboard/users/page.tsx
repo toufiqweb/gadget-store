@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { useToast } from "@/contexts/ToastContext";
 import { getAdminUsers, updateUserStatusAction, updateUserRoleAction } from "@/lib/api/user";
 import { Loader2, Search, Users, ChevronLeft, ChevronRight, UserMinus, UserCheck, Shield } from "lucide-react";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
 export default function AdminUsersPage() {
+  const { showToast } = useToast();
   const { data: session, isPending: isAuthPending } = authClient.useSession();
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,11 +83,11 @@ export default function AdminUsersPage() {
           return u;
         }));
       } else {
-        alert(res.message || "Failed to update user status");
+        showToast(res.message || "Failed to update user status", "error");
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      alert(err.message || "An unexpected error occurred");
+      showToast(err.message || "An unexpected error occurred", "error");
     } finally {
       setActionProgressId(null);
     }
@@ -105,11 +107,11 @@ export default function AdminUsersPage() {
           return u;
         }));
       } else {
-        alert(res.message || "Failed to update user role");
+        showToast(res.message || "Failed to update user role", "error");
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      alert(err.message || "An unexpected error occurred");
+      showToast(err.message || "An unexpected error occurred", "error");
     } finally {
       setActionProgressId(null);
     }

@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { getAdminProducts } from "@/lib/api/product";
+import { useToast } from "@/contexts/ToastContext";
 import { deleteProductAction, patchProductAction } from "@/lib/actions/products";
 import { Loader2, Search, Edit, Trash2, X, Plus, ChevronLeft, ChevronRight, Star, PackageOpen, AlertTriangle } from "lucide-react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function AdminProductsPage() {
+  const { showToast } = useToast();
   const { data: session, isPending: isAuthPending } = authClient.useSession();
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -178,7 +180,7 @@ export default function AdminProductsPage() {
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      alert(err.message || "Failed to delete product. Please try again.");
+      showToast(err.message || "Failed to delete product. Please try again.", "error");
     } finally {
       setIsDeleting(false);
     }

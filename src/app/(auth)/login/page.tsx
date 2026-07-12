@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { useToast } from "@/contexts/ToastContext";
 import { Smartphone, Mail, Lock, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const { showToast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +32,7 @@ export default function LoginPage() {
         },
         onSuccess: () => {
           setLoading(false);
+          showToast("Logged in successfully!", "success");
           // Redirect to homepage on success
           router.push("/");
         },

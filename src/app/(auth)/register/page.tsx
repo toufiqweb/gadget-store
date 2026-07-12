@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { useToast } from "@/contexts/ToastContext";
 import { Smartphone, Mail, Lock, User, Loader2, Image as ImageIcon } from "lucide-react";
 
 export default function RegisterPage() {
@@ -14,6 +15,7 @@ export default function RegisterPage() {
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const { showToast } = useToast();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +35,8 @@ export default function RegisterPage() {
         },
         onSuccess: () => {
           setLoading(false);
-          // Redirect to dashboard or login on success
+          showToast("Account created successfully!", "success");
+          // Redirect to homepage on success
           router.push("/");
         },
         onError: (ctx) => {
