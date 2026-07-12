@@ -11,15 +11,13 @@ export default function Footer() {
           
           {/* Column 1: Brand & About */}
           <div className="space-y-6">
-            <Link href="/" className="inline-block">
-              <div className="flex flex-col items-start leading-none">
-                <div className="flex items-center text-3xl font-bold tracking-tighter text-white">
-                  <span>G</span>
-                  <span className="text-[var(--ternary)] -mx-0.5">&</span>
-                  <span>S</span>
+            <Link href="/" className="inline-block group">
+              <div className="flex flex-col">
+                <div className="text-3xl font-black text-white tracking-tight leading-none group-hover:text-gray-200 transition-colors">
+                  GADGET<span className="text-[var(--ternary)]">.</span>
                 </div>
-                <span className="text-[9px] uppercase tracking-widest text-gray-400 mt-0.5">
-                  Gadget & store
+                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em] mt-1">
+                  Store
                 </span>
               </div>
             </Link>

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Star, ShoppingCart, Check, ShieldCheck, Truck, ChevronRight } from "lucide-react";
 
 export default function ProductDetails({ product }: { product: any }) {
-  // গ্যালারির জন্য মেইন ইমেজ স্টেট
   const [activeImage, setActiveImage] = useState(
     product.images?.[0] || product.thumbnail || "https://placehold.co/600x600/f8fafc/a1a1aa?text=No+Image"
   );
@@ -82,8 +81,6 @@ export default function ProductDetails({ product }: { product: any }) {
                   <span className="font-bold text-sm">{product.rating ? Number(product.rating).toFixed(1) : "0.0"}</span>
                 </div>
                 <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                <span className="text-sm text-gray-500">124 Reviews</span>
-                <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
                 <span className="text-sm text-green-600 font-medium flex items-center gap-1">
                   <Check size={16} /> In Stock ({product.stock})
                 </span>
@@ -102,11 +99,17 @@ export default function ProductDetails({ product }: { product: any }) {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                <button className="flex-1 h-14 bg-[var(--ternary)] text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 hover:bg-orange-600 transition-colors shadow-sm hover:shadow-md active:scale-95">
+                <button 
+                  onClick={() => alert("Cart functionality is coming soon!")}
+                  className="flex-1 h-14 bg-[var(--ternary)] text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 hover:bg-orange-600 transition-colors shadow-sm hover:shadow-md active:scale-95"
+                >
                   <ShoppingCart size={20} />
                   Add to Cart
                 </button>
-                <button className="flex-1 h-14 bg-gray-900 text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors shadow-sm hover:shadow-md active:scale-95">
+                <button 
+                  onClick={() => alert("Checkout functionality is coming soon!")}
+                  className="flex-1 h-14 bg-gray-900 text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors shadow-sm hover:shadow-md active:scale-95"
+                >
                   Buy it Now
                 </button>
               </div>

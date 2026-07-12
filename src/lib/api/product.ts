@@ -55,3 +55,17 @@ export const getAdminProducts = async (page = 1, limit = 10, search = "") => {
   const queryParams = `?page=${page}&limit=${limit}${search ? `&search=${encodeURIComponent(search)}` : ""}`;
   return protectedFetch(`/api/admin/products${queryParams}`, {}, { cache: 'no-store' });
 };
+
+/**
+ * Fetch admin dashboard stats (totals, charts data)
+ */
+export const getAdminStats = async () => {
+  return protectedFetch("/api/admin/stats", {}, { cache: 'no-store' });
+};
+
+/**
+ * Fetch current user dashboard stats (my products, categories, chart data)
+ */
+export const getUserStats = async () => {
+  return protectedFetch("/api/users/stats", {}, { cache: 'no-store' });
+};

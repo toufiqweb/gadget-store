@@ -111,14 +111,12 @@ export default function DashboardSidebar() {
                 G
               </div>
             ) : (
-              <div className="flex flex-col items-start leading-none">
-                <div className="flex items-center text-xl lg:text-2xl font-bold tracking-tighter text-gray-900">
-                  <span>G</span>
-                  <span className="text-[var(--ternary)] -mx-0.5">&</span>
-                  <span>S</span>
+              <div className="flex flex-col group">
+                <div className="text-2xl lg:text-3xl font-black text-gray-900 tracking-tight leading-none group-hover:text-[var(--ternary)] transition-colors">
+                  GADGET<span className="text-[var(--ternary)]">.</span>
                 </div>
-                <span className="text-[0.5rem] uppercase tracking-widest text-gray-500 mt-0.5 whitespace-nowrap">
-                  Gadget & store
+                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-1">
+                  Store
                 </span>
               </div>
             )}
