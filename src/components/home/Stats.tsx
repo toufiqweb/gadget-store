@@ -33,7 +33,7 @@ export default function Features() {
           <div 
             key={index} 
             className={`
-              relative group flex flex-col p-4 lg:p-5 xl:p-6 transition-colors duration-300 hover:bg-gray-50/50 cursor-default
+              relative group flex flex-col p-4 lg:p-5 xl:p-6 transition-colors duration-300 hover:bg-gray-50/50 cursor-default overflow-hidden
               ${index !== features.length - 1 ? 'border-b lg:border-b-0 lg:border-r border-gray-200' : ''}
               ${index === 0 || index === 1 ? 'md:border-b border-gray-200' : ''}
               lg:!border-b-0

@@ -40,3 +40,10 @@ export const getMyOrdersClient = async (userId: string, page = 1, limit = 10) =>
     { "x-user-id": userId }
   );
 };
+
+/**
+ * Protected fetch to get current user's products
+ */
+export const getMyProducts = async () => {
+  return protectedFetch("/api/products/user/my-products", {}, { cache: 'no-store' });
+};

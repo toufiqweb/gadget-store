@@ -24,6 +24,7 @@ const adminLinks = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
   { name: "Products", href: "/dashboard/products", icon: Package },
+  { name: "My Products", href: "/dashboard/my-products", icon: Package },
   { name: "Add Product", href: "/dashboard/add-product", icon: PackagePlus },
   { name: "Customers", href: "/dashboard/customers", icon: Users },
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
@@ -32,6 +33,7 @@ const adminLinks = [
 
 const userLinks = [
   { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
+  { name: "My Products", href: "/dashboard/my-products", icon: Package },
   { name: "Add Product", href: "/dashboard/add-product", icon: PackagePlus },
   { name: "Profile", href: "/dashboard/profile", icon: Users },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },

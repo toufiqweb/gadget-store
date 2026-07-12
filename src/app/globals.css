@@ -6,10 +6,16 @@
   --ternary: #f26e21;
 }
 
-body, p {
+body,
+p {
   font-family: var(--font-inter), sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-poppins), sans-serif;
 }
